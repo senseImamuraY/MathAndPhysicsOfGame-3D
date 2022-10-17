@@ -56,10 +56,10 @@ public class Transform1_4 : MonoBehaviour {
         //Matrix4x4 matTransform = matTransform1 * matTransform2;
         transform.position = matTransform * v3InitialPos;               // 変換
         transform.rotation = qInitialRot;                               // 回転初期化
-        transform.Rotate(0.0f, fAngle1 * 360.0f / (2.0f * Mathf.PI), 0.0f, Space.World);
-        transform.Rotate(fAngle2 * 360.0f / (2.0f * Mathf.PI), 0.0f, 0.0f, Space.World);
-        //transform.Rotate(fAngle2 * 360.0f / (2.0f * Mathf.PI), 0.0f, 0.0f, Space.World);
         //transform.Rotate(0.0f, fAngle1 * 360.0f / (2.0f * Mathf.PI), 0.0f, Space.World);
+        //transform.Rotate(fAngle2 * 360.0f / (2.0f * Mathf.PI), 0.0f, 0.0f, Space.World);
+        transform.Rotate(fAngle2 * 360.0f / (2.0f * Mathf.PI), 0.0f, 0.0f, Space.World);
+        transform.Rotate(0.0f, fAngle1 * 360.0f / (2.0f * Mathf.PI), 0.0f, Space.World);
         rend.material.color = colorCube;
     }
 }
