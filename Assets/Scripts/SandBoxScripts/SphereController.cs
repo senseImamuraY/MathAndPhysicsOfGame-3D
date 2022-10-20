@@ -6,7 +6,7 @@ public class SphereController : MonoBehaviour
 {
   private Rigidbody rb;
   // Start is called before the first frame update
-  private float speed = 100f;
+  private float speed = 700f;
 
   void Start()
   {
@@ -19,7 +19,7 @@ public class SphereController : MonoBehaviour
   void Update()
   {
     //Debug.Log(rb);
-
+    
   }
 
   void FixedUpdate()
