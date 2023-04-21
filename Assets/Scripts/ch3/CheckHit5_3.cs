@@ -6,7 +6,9 @@ public class CheckHit5_3 : MonoBehaviour {
     private Material material;
     private Mesh polygon;
     private const float fFloorSize = 10.0f;
+    // X軸
     private Vector3 v3Vec1 = new Vector3(fFloorSize / 2.0f, 0.0f, 0.0f);
+    // Z軸
     private Vector3 v3Vec2 = new Vector3(0.0f, 0.0f, fFloorSize / 2.0f);
     private Vector3 v3GroundNormal = new Vector3(0.0f, 1.0f, 0.0f);
     private const float fVelocity = 0.1f;
@@ -61,17 +63,33 @@ public class CheckHit5_3 : MonoBehaviour {
     void FixedUpdate()
     {
         // 地面の傾斜変更
+        //v3Vec1 = new Vector3(fFloorSize / 2.0f,
+        //                     2.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 5.0f),
+        //                     3.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 10.0f));
+        //v3Vec2 = new Vector3(5.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 12.0f),
+        //                     0.8f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 7.0f) + 0.7f,
+        //                     fFloorSize / 2.0f);        
         v3Vec1 = new Vector3(fFloorSize / 2.0f,
-                             2.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 5.0f),
-                             3.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 10.0f));
-        v3Vec2 = new Vector3(5.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 12.0f),
-                             0.8f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 7.0f) + 0.7f,
+                             0.0f,
+                             0.0f);
+        v3Vec2 = new Vector3(0.0f,
+                             0.0f,
                              fFloorSize / 2.0f);
         // 基底ベクトル計算
         float bx = transform.position.x + Input.GetAxis("Horizontal") * fVelocity;
         float bz = transform.position.z + Input.GetAxis("Vertical") * fVelocity;
         Vector3 v3Normal = Vector3.Cross(v3Vec1, v3Vec2);
-        float by = (-v3Normal.x * bx - v3Normal.z * bz) / v3Normal.y + 0.5f;
-        transform.position = new Vector3(bx, by, bz);
+        float dot = v3Normal.x* transform.position.x + v3Normal.y * transform.position.y + v3Normal.z * transform.position.z;
+        float d = -dot;
+        float by = (-v3Normal.x * bx - v3Normal.z * bz + d ) / v3Normal.y + 0.5f;
+        //transform.position = new Vector3(bx, Mathf.Round(by), bz);
+        //Debug.Log(transform.position);
+
+        // 誤差を許容する
+        float epsilon = 0.5f; // 誤差の範囲を設定
+        if (Mathf.Abs(transform.position.y - by) < epsilon)
+        {
+            transform.position = new Vector3(bx, by, bz);
+        }
     }
 }
