@@ -23,10 +23,10 @@ public class CustomPlaneCollider : MonoBehaviour
     // 頂点
     float X, Y, Z;
     public Vector3[] positions = new Vector3[]{
-        new Vector3(-fFloorSize / 2.0f, 1.0f, fFloorSize / 2.0f),
-        new Vector3( fFloorSize / 2.0f, 1.0f, fFloorSize / 2.0f),
-        new Vector3(-fFloorSize / 2.0f, 1.0f,-fFloorSize / 2.0f),
-        new Vector3( fFloorSize / 2.0f, 1.0f,-fFloorSize / 2.0f),
+        new Vector3(-fFloorSize / 2.0f, 0f, fFloorSize / 2.0f),
+        new Vector3( fFloorSize / 2.0f, 0f, fFloorSize / 2.0f),
+        new Vector3(-fFloorSize / 2.0f, 0f,-fFloorSize / 2.0f),
+        new Vector3( fFloorSize / 2.0f, 0f,-fFloorSize / 2.0f),
     };
 
     // 法線ベクトル
@@ -74,20 +74,13 @@ public class CustomPlaneCollider : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log("capsulePosition = " + capsulePosition);
-        //capsulePosition = capsulePosition - halfHeight;
-        // 地面の傾斜変更
-        //v3Vec1 = new Vector3(fFloorSize / 2.0f,
-        //                     2.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 5.0f),
-        //                     3.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 10.0f));
-        //v3Vec2 = new Vector3(5.0f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 12.0f),
-        //                     0.8f * Mathf.Sin(Time.time * 2.0f * Mathf.PI / 7.0f) + 0.7f,
-        //                     fFloorSize / 2.0f);        
+        //Debug.Log("capsulePosition = " + capsulePosition);
+   
         v3Vec1 = new Vector3(fFloorSize / 2.0f,
-                             1.0f,
+                             0f,
                              0.0f);
         v3Vec2 = new Vector3(0.0f,
-                             1.0f,
+                             0f,
                              fFloorSize / 2.0f);
         //capsulePosition = transform.position - halfHeight;
         // 基底ベクトル計算
@@ -95,28 +88,23 @@ public class CustomPlaneCollider : MonoBehaviour
         float by = capsulePosition.y + Input.GetAxis("Vertical") * fVelocity;
         float bz = 0;
         Vector3 v3Normal = Vector3.Cross(v3Vec1, v3Vec2);
-
-        float dot = v3Normal.x * capsulePosition.x + v3Normal.y * capsulePosition.y + v3Normal.z * capsulePosition.z;
-        //float d = dot;
-        float d = -dot;
-        Debug.Log("d = "+d);
-        if(v3Normal.x < 0.01f)
+        if (v3Normal.x < 0.01f)
         {
             X = 0.01f;
         }
         else
         {
             X = v3Normal.x;
-        }        
-        if(v3Normal.y < 0.01f)
+        }
+        if (v3Normal.y < 0.01f)
         {
             Y = 0.01f;
         }
         else
         {
             Y = v3Normal.x;
-        }        
-        if(v3Normal.z < 0.01f)
+        }
+        if (v3Normal.z < 0.01f)
         {
             Z = 0.01f;
         }
@@ -124,13 +112,19 @@ public class CustomPlaneCollider : MonoBehaviour
         {
             Z = v3Normal.x;
         }
+        float dot = v3Normal.x * capsulePosition.x + v3Normal.y * capsulePosition.y + v3Normal.z * capsulePosition.z;
+        //float d = dot;
+        float d = dot;
+        //Debug.Log("d = "+d);
+
         //Vector3 p1 = new Vector3(0, 0, 0);
         Vector3 p1 = new Vector3(-d / (3 * X), -d / (3 * Y), -d / (3 * Z));
         //Vector3 p1 = new Vector3(-d/(3 * v3Normal.x), -d /(3 * v3Normal.y), -d/(3 * v3Normal.z));
-        Debug.Log("p1 = " + p1);
+        //Debug.Log("p1 = " + p1);
 
         Vector3 V = (capsulePosition) - p1;
-        Debug.Log("V = " + V);
+        //Debug.Log("V = " + V);
+        //float e = v3Normal.x * V.x + v3Normal.y * V.y + v3Normal.z * V.z;
         float e = Vector3.Dot(v3Normal, V);
         //float by = (-v3Normal.x * bx - v3Normal.z * bz + d) / v3Normal.y + 0.5f;
         //transform.position = new Vector3(bx, Mathf.Round(by), bz);
@@ -142,15 +136,28 @@ public class CustomPlaneCollider : MonoBehaviour
         if (Mathf.Abs(capsulePosition.y - by) < epsilon)
         {
             capsulePosition = new Vector3(bx, by, bz);
-            transform.position = capsulePosition;
+            transform.position = capsulePosition + halfHeight;
         }
         if (e <= 0.0f)
-        {                       // ２乗のまま比較
+        {                       
             rend.material.color = colorHit;
         }
         else
         {
             rend.material.color = colorNoHit;
+        }
+
+        if (capsulePosition.y <= 0.0f)
+        {
+            capsulePosition.y = 0.0f;
+        }
+        if (capsulePosition.x <= -5.0f)
+        {
+            capsulePosition.x = -5.0f;
+        }
+        if (capsulePosition.x >= 5.0f) 
+        {
+            capsulePosition.x = 5.0f;
         }
     }
 }
